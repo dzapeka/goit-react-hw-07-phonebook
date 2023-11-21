@@ -3,7 +3,6 @@ import { contactsReducer } from './contacts/contacts.reducer';
 
 export const store = configureStore({
   reducer: {
-    // contactsStore: persistReducer(contactsConfig, contactsReducer),
     contactsStore: contactsReducer,
   },
 });
