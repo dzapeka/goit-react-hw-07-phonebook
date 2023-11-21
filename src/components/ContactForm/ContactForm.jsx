@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/contacts/contacts.reducer';
 import styles from './ContactForm.module.css';
+import { addContact } from 'redux/contacts/contacts.reducer';
 
 export const ContactForm = () => {
   const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [phone, setPhone] = useState('');
 
   const nameInputId = nanoid();
-  const numberInputId = nanoid();
+  const phoneInputId = nanoid();
 
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contactsStore.contacts);
+  const contacts = useSelector(state => state.contactsStore.contacts.items);
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -25,16 +25,16 @@ export const ContactForm = () => {
       alert(`${name} is already in contacts.`);
       return;
     }
-    dispatch(addContact(name, number));
+    dispatch(addContact({ name, phone }));
     setName('');
-    setNumber('');
+    setPhone('');
   };
 
   const handleChange = event => {
     const { name, value } = event.target;
     const stateFunctions = {
       name: setName,
-      number: setNumber,
+      phone: setPhone,
     };
 
     stateFunctions[name]?.(value);
@@ -55,15 +55,15 @@ export const ContactForm = () => {
           pattern="^[a-zA-Zа-яА-ЯїіІ'Ї\s]+$"
         />
       </label>
-      <label htmlFor={numberInputId}>
-        <p className={styles.labelText}>Number</p>
+      <label htmlFor={phoneInputId}>
+        <p className={styles.labelText}>Phone</p>
         <input
           className="phoneNumberInput"
           type="tel"
-          name="number"
-          value={number}
+          name="phone"
+          value={phone}
           onChange={handleChange}
-          id={numberInputId}
+          id={phoneInputId}
           autoComplete="off"
           required
           pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}"

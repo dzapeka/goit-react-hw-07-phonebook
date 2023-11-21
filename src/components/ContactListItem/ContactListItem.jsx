@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import styles from './ContectListItem.module.css';
 import { deleteContact } from 'redux/contacts/contacts.reducer';
 
-export const ContactListItem = ({ id, name, number }) => {
+export const ContactListItem = ({ id, name, phone }) => {
   const dispatch = useDispatch();
 
   const handleDeleteContact = () => {
@@ -11,7 +11,7 @@ export const ContactListItem = ({ id, name, number }) => {
 
   return (
     <li className={styles.contactListItem}>
-      {name}: {number}
+      {name}: {phone}
       <button
         className={styles.deleteContactBtn}
         onClick={handleDeleteContact}
