@@ -25,6 +25,12 @@ export const ContactList = () => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (error) {
+      Notify.failure(error);
+    }
+  }, [error]);
+
   return (
     <>
       {isLoading ? (
