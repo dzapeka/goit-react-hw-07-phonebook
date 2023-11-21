@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice, isAnyOf } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const API_BASE_URL = 'https://655bc8bcab37729791a994d4.mockapi.io/contacts2';
+
 export const fetchContacts = createAsyncThunk(
   'contacts/fetchAll',
   async (_, thunkApi) => {
     try {
-      const { data } = await axios.get(
-        'https://655bc8bcab37729791a994d4.mockapi.io/contacts'
-      );
+      const { data } = await axios.get(API_BASE_URL);
 
       return data;
     } catch (error) {
@@ -20,10 +20,7 @@ export const addContact = createAsyncThunk(
   'contacts/addContact',
   async (contact, thunkApi) => {
     try {
-      const { data } = await axios.post(
-        'https://655bc8bcab37729791a994d4.mockapi.io/contacts',
-        contact
-      );
+      const { data } = await axios.post(API_BASE_URL, contact);
 
       return data;
     } catch (error) {
@@ -36,9 +33,7 @@ export const deleteContact = createAsyncThunk(
   'contacts/deleteContact ',
   async (contactId, thunkApi) => {
     try {
-      const { data } = await axios.delete(
-        `https://655bc8bcab37729791a994d4.mockapi.io/contacts/${contactId}`
-      );
+      const { data } = await axios.delete(`${API_BASE_URL}/${contactId}`);
 
       return data;
     } catch (error) {
@@ -69,16 +64,19 @@ const contactsSlice = createSlice({
       .addCase(fetchContacts.fulfilled, (state, { payload }) => {
         state.contacts.isLoading = false;
         state.contacts.items = payload;
-        console.log('contacts/fetchAll', payload);
       })
       .addCase(addContact.fulfilled, (state, { payload }) => {
+        state.contacts.isLoading = false;
         state.contacts.items.push(payload);
-        console.log('contacts/addContact', payload);
       })
       .addCase(deleteContact.fulfilled, (state, { payload }) => {
+        state.contacts.isLoading = false;
         state.contacts.items = state.contacts.items.filter(
           contact => contact.id !== payload.id
         );
+      })
+      .addCase(fetchContacts.pending, state => {
+        state.contacts.isLoading = true;
       })
       .addMatcher(
         isAnyOf(
@@ -87,7 +85,6 @@ const contactsSlice = createSlice({
           deleteContact.pending
         ),
         state => {
-          state.contacts.isLoading = true;
           state.contacts.error = null;
         }
       )
@@ -99,7 +96,7 @@ const contactsSlice = createSlice({
         ),
         (state, { payload }) => {
           state.contacts.isLoading = false;
-          state.contacts = payload;
+          state.contacts.error = payload;
         }
       ),
 });
